@@ -1,0 +1,268 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package sakila.ui;
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.Vector;
+import javax.swing.table.DefaultTableModel;
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import sakila.entity.Actor;
+import sakila.entity.ActorFilm;
+import sakila.entity.Film;
+import sakila.entity.FilmActor;
+import sakila.util.NewHibernateUtil;
+
+/**
+ *
+ * @author AntDVD
+ */
+public class NewJFrame extends javax.swing.JFrame {
+
+    /**
+     * Creates new form NewJFrame
+     */
+    public NewJFrame() {
+        initComponents();
+    }
+    
+    //SOLUCION 1
+    //private static String CONSULTA_BASADA_EN_NOMBRE_PELICULA = "from Film f where f.title like '";
+   
+    //SOLUCION 2
+    //private static String CONSULTA_BASADA_EN_NOMBRE_PELICULA = "SELECT f.title, f.description, a.firstName, a.lastName from Film AS f, FilmActor AS fa, Actor AS a "
+    //        + "WHERE f.filmId = fa.film AND fa.actor = a.actorId AND f.title like '";
+    
+    //SOLUCION 3
+    private static String CONSULTA_BASADA_EN_NOMBRE_PELICULA = "from FilmActor f where f.film.title like '";
+   
+    
+    private void ejecutaConsultaBasadaEnNombrePelicula(){
+        
+        ejecutaHQLConsulta(CONSULTA_BASADA_EN_NOMBRE_PELICULA + jTextFieldNombrePelicula.getText() + "%'");
+    }
+    
+    private void ejecutaHQLConsulta(String hql){
+        try {
+            
+            Session session;
+            session = NewHibernateUtil.getSessionFactory().openSession();
+            session.beginTransaction();
+            
+            Query consulta = session.createQuery(hql);
+            
+            List<Object[]> resultList = consulta.list();
+      
+            mostrarResultados(resultList);
+            session.getTransaction().commit();
+            
+        }catch(HibernateException he){
+            
+            he.printStackTrace();
+        }
+    }
+    
+    private void mostrarResultados(List<Object[]> resultList){
+        Vector <String> tableHeaders = new Vector <String>();
+        Vector tableData = new Vector();
+        tableHeaders.add("Nombre pelicula");
+        tableHeaders.add("Descripción pelicula");
+        tableHeaders.add("Nombre del Actor");
+        tableHeaders.add("Apellido del Actor");
+        
+        //SOLUCION 1
+        //Recorremos la lista de objetos obtenida en la consulta
+        /*
+        for(Object o : resultList){
+           //Cada objeto lo volcamos en un modelo Film 
+           Film f = (Film) o;
+           //A través del método getFilmActors obtenemos la lista de actores que intervienen en la película    
+           Set lista_actores = f.getFilmActors();
+           //Recorremos la lista compuesta por los actores
+           for(Object elemento: lista_actores){
+              Vector <Object> oneRow = new Vector <Object>();
+              //Tenemos que hacer el cast sobre el modelo FilmActor pues es el que contiene los métodos que necesitamos
+              FilmActor fa = (FilmActor) elemento;
+              oneRow.add(fa.getFilm().getTitle()); 
+              oneRow.add(fa.getFilm().getDescription());
+              oneRow.add(fa.getActor().getFirstName());
+              oneRow.add(fa.getActor().getLastName());
+              tableData.add(oneRow); 
+           }                
+        }
+        */
+        
+        //SOLUCION 2 (SOLUCIÓN SIN UTILIZAR LAS CLASES)
+        
+        //Recorremos la lista de objetos obtenida en la consulta
+        /*
+        for (Object[] o : resultList){
+            Vector <Object> oneRow = new Vector <Object>();
+            //Recorremos el array de objetos
+            for (Object object : o)
+            {        
+                String s =  (String) object;  
+                oneRow.add(s);          
+                
+            }
+            tableData.add(oneRow);         
+        }
+        */
+        
+        //SOLUCION 3 (FACILITADA POR EL PROFESOR, MÁS ÓPTIMA)
+        //Recorremos la lista de objetos obtenida en la consulta
+        for (Object o : resultList){
+            
+            Vector <Object> oneRow = new Vector <Object>();
+            
+            FilmActor f = (FilmActor) o;
+
+            oneRow.add(f.getFilm().getTitle()); 
+
+            oneRow.add(f.getFilm().getDescription());
+
+            oneRow.add(f.getActor().getFirstName());
+
+            oneRow.add(f.getActor().getLastName());
+
+            tableData.add(oneRow); 
+        }
+        
+        jTableResultado.setModel(new DefaultTableModel (tableData, tableHeaders));
+        
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jLabelTitulo = new javax.swing.JLabel();
+        jLabelNombrePelicula = new javax.swing.JLabel();
+        jTextFieldNombrePelicula = new javax.swing.JTextField();
+        jButtonBuscar = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTableResultado = new javax.swing.JTable();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jLabelTitulo.setText("B U S C A R     A C T O R E S");
+
+        jLabelNombrePelicula.setText("Nombre de la pelicula: ");
+
+        jButtonBuscar.setText("Buscar");
+        jButtonBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonBuscarActionPerformed(evt);
+            }
+        });
+
+        jTableResultado.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {},
+                {},
+                {},
+                {}
+            },
+            new String [] {
+
+            }
+        ));
+        jScrollPane1.setViewportView(jTableResultado);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(34, 34, 34)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabelNombrePelicula)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jTextFieldNombrePelicula, javax.swing.GroupLayout.PREFERRED_SIZE, 329, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(29, 29, 29)
+                        .addComponent(jButtonBuscar)))
+                .addGap(30, 30, 30))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabelTitulo)
+                .addGap(225, 225, 225))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(24, 24, 24)
+                .addComponent(jLabelTitulo)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextFieldNombrePelicula, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
+                    .addComponent(jButtonBuscar)
+                    .addComponent(jLabelNombrePelicula))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void jButtonBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarActionPerformed
+        ejecutaConsultaBasadaEnNombrePelicula();
+    }//GEN-LAST:event_jButtonBuscarActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(NewJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(NewJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(NewJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(NewJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new NewJFrame().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonBuscar;
+    private javax.swing.JLabel jLabelNombrePelicula;
+    private javax.swing.JLabel jLabelTitulo;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTableResultado;
+    private javax.swing.JTextField jTextFieldNombrePelicula;
+    // End of variables declaration//GEN-END:variables
+}
