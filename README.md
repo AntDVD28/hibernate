@@ -110,4 +110,6 @@ Desarrollar un proyecto
 
 Debe de implementar un formulario Jframe que permita realizar la consulta de los actores que han participado en una película concreta, que se solicite al usuario. Mostrar en el resultado de la consulta los siguientes campos : Nombre y apellidos del actor y titulo y descripción de la película.
 
+He incluido tres formas posibles de resolver el problema planteado.
+
 
