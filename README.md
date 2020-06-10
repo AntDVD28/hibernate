@@ -5,7 +5,7 @@ Trabajo correspondiente a la asignatura AD (Acceso a Datos) perteneciente a la t
 
 La versión que utilicé del JDK es la 1.8
 
-##Instalación / Configuración de Sakila
+Instalación / Configuración de Sakila
 =====================================
 
 Utilizaremos la BD MySQL Sakila. La instalación de Sakila se hace como un plugin en Netbeans.
@@ -19,7 +19,7 @@ Crearemos a continuación la Base de Datos de Sakila, para ello clic con el bot�
 Para conectarnos a ella, clic con el botón derecho del ratón sobre la base de datos y seleccionaremos “Conectar”. Esto creará la cadena de conexión, pudiendo desplegarla y acceder a su contenido.
 
 
-##Instalación / Configuración de Hibernate
+Instalación / Configuración de Hibernate
 ========================================
 
 Hibernate se instaló automáticamente durante la instalación del IDE de Netbeans 8.2, dentro del módulo JAVA SE podremos encontrarlo. Si no viniese podríamos instalarlo como un plugin. 
@@ -74,7 +74,7 @@ En la siguiente ventana es importante que nos aseguremos que aparece el archivo 
 En el paquete sakila.entity podremos visualizar todos los archivos generados de forma automática.
 
 
-##Consultas HQL
+Consultas HQL
 =============
 
 NetBeans nos permite construir y probar consultas basadas en HibernateQueryLanguage (HQL) con el editor de Consultas HQL, al introducir la consulta podremos visualizar la consulta equivalente en SQL. 
@@ -104,7 +104,7 @@ En HQL:
 SELECT ci.city, co.country from City AS ci, Country AS co WHERE ci.country = co.countryId AND co.country="Spain"
 
 
-##Desarrollar un proyecto
+Desarrollar un proyecto
 =======================
 
 Debe de implementar un formulario Jframe que permita realizar la consulta de los actores que han participado en una película concreta, que se solicite al usuario. Mostrar en el resultado de la consulta los siguientes campos : Nombre y apellidos del actor y titulo y descripción de la película.
