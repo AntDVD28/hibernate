@@ -26,6 +26,8 @@ Hibernate se instaló automáticamente durante la instalación del IDE de Netbea
 
 Netbeans nos incluye asistentes mediante los cuales podremos crear los archivos de configuración de Hibernate.
 
+
+
 **hibernate.cfg.xml**
 
 Este archivo contiene información sobre la conexión de la base de datos, recursos de mapeo y otras propiedades de conexión.
